@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>LMD Accounting – Leah M. Davis</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0C447C;
+    --blue: #185FA5;
+    --mid: #378ADD;
+    --light: #B5D4F4;
+    --pale: #E6F1FB;
+    --gray: #888780;
+    --dark: #1a1a2e;
+    --white: #ffffff;
+    --off: #f8f7f4;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    color: var(--dark);
+    background: var(--off);
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.25rem 4rem;
+    background: rgba(248,247,244,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 0.5px solid rgba(180,212,244,0.4);
+  }
+
+  .nav-logo {
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+
+  .nav-mark svg { width: 32px; height: 32px; }
+
+  .nav-wordmark {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    color: var(--navy);
+    text-transform: uppercase;
+  }
+
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gray);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--navy); }
+
+  /* HERO */
+  #home {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 8rem 4rem 5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 60% 50% at 80% 30%, rgba(55,138,221,0.08) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 10% 80%, rgba(12,68,124,0.05) 0%, transparent 70%);
+  }
+
+  .hero-tag {
+    font-size: 0.72rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .hero-tag::before {
+    content: '';
+    display: block; width: 32px; height: 1px;
+    background: var(--mid);
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    font-weight: 300;
+    line-height: 1.0;
+    color: var(--navy);
+    max-width: 700px;
+    margin-bottom: 2rem;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--mid);
+  }
+
+  .hero-sub {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--gray);
+    max-width: 420px;
+    margin-bottom: 3rem;
+  }
+
+  .hero-cta {
+    display: inline-flex; align-items: center; gap: 0.75rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--white);
+    background: var(--navy);
+    padding: 1rem 2rem;
+    text-decoration: none;
+    transition: background 0.2s, gap 0.2s;
+  }
+  .hero-cta:hover { background: var(--blue); gap: 1.1rem; }
+  .hero-cta span { font-size: 1.1rem; }
+
+  .hero-logo-large {
+    position: absolute; right: 6rem; top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.06;
+    pointer-events: none;
+  }
+
+  /* SECTION SHARED */
+  section { padding: 7rem 4rem; }
+  .section-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .section-label::before {
+    content: ''; display: block;
+    width: 24px; height: 1px; background: var(--mid);
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 300;
+    color: var(--navy);
+    line-height: 1.15;
+    margin-bottom: 1.5rem;
+  }
+
+  /* SERVICES */
+  #services { background: var(--white); }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1px;
+    background: var(--light);
+    border: 1px solid var(--light);
+    margin-top: 4rem;
+  }
+  .service-card {
+    background: var(--white);
+    padding: 2.5rem 2rem;
+    transition: background 0.2s;
+  }
+  .service-card:hover { background: var(--pale); }
+
+  .service-icon {
+    width: 36px; height: 36px;
+    margin-bottom: 1.5rem;
+  }
+  .service-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 0.75rem;
+  }
+  .service-desc {
+    font-size: 0.85rem;
+    line-height: 1.75;
+    color: var(--gray);
+  }
+
+  /* PRICING */
+  #pricing { background: var(--off); }
+  .pricing-intro {
+    font-size: 1rem; line-height: 1.8;
+    color: var(--gray); max-width: 500px;
+    margin-bottom: 4rem;
+  }
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+  }
+  .pricing-card {
+    background: var(--white);
+    border: 0.5px solid var(--light);
+    padding: 2.5rem 2rem;
+    position: relative;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .pricing-card:hover { border-color: var(--mid); transform: translateY(-4px); }
+  .pricing-card.featured {
+    border-color: var(--blue);
+    background: var(--navy);
+  }
+  .pricing-badge {
+    position: absolute; top: -12px; left: 2rem;
+    font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;
+    background: var(--mid); color: var(--white);
+    padding: 4px 12px;
+  }
+  .pricing-tier {
+    font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--gray); margin-bottom: 1rem;
+  }
+  .pricing-card.featured .pricing-tier { color: var(--light); }
+
+  .pricing-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3rem; font-weight: 300;
+    color: var(--navy); line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+  .pricing-card.featured .pricing-price { color: var(--white); }
+
+  .pricing-period {
+    font-size: 0.78rem; color: var(--gray); margin-bottom: 2rem;
+  }
+  .pricing-card.featured .pricing-period { color: var(--light); }
+
+  .pricing-features { list-style: none; margin-bottom: 2rem; }
+  .pricing-features li {
+    font-size: 0.85rem; color: var(--gray);
+    padding: 0.5rem 0;
+    border-bottom: 0.5px solid var(--pale);
+    display: flex; align-items: center; gap: 0.6rem;
+  }
+  .pricing-card.featured .pricing-features li { color: var(--light); border-color: rgba(181,212,244,0.2); }
+  .pricing-features li::before {
+    content: '';
+    display: inline-block; width: 6px; height: 6px;
+    border-radius: 50%; background: var(--mid); flex-shrink: 0;
+  }
+
+  .pricing-cta {
+    display: block; text-align: center;
+    font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
+    padding: 0.85rem;
+    text-decoration: none;
+    border: 0.5px solid var(--navy);
+    color: var(--navy);
+    transition: background 0.2s, color 0.2s;
+  }
+  .pricing-cta:hover { background: var(--navy); color: var(--white); }
+  .pricing-card.featured .pricing-cta {
+    border-color: var(--white); color: var(--white);
+  }
+  .pricing-card.featured .pricing-cta:hover { background: var(--white); color: var(--navy); }
+
+  /* ABOUT */
+  #about {
+    background: var(--white);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: center;
+  }
+  .about-visual {
+    position: relative;
+  }
+  .about-rect {
+    width: 100%; aspect-ratio: 3/4;
+    background: var(--pale);
+    border: 0.5px solid var(--light);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .about-accent {
+    position: absolute; bottom: -1.5rem; right: -1.5rem;
+    width: 60%; aspect-ratio: 1;
+    background: var(--navy);
+    display: flex; align-items: center; justify-content: center;
+    z-index: -1;
+  }
+  .about-stat {
+    text-align: center;
+  }
+  .about-stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 4rem; font-weight: 300;
+    color: var(--white); line-height: 1;
+  }
+  .about-stat-label {
+    font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--light);
+  }
+  .about-text p {
+    font-size: 0.95rem; line-height: 1.9;
+    color: var(--gray); margin-bottom: 1.25rem;
+  }
+  .about-signature {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem; font-style: italic;
+    color: var(--navy); margin-top: 2rem;
+  }
+
+  /* TESTIMONIALS */
+  #testimonials { background: var(--navy); }
+  #testimonials .section-label { color: var(--light); }
+  #testimonials .section-label::before { background: var(--light); }
+  #testimonials .section-title { color: var(--white); }
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 3.5rem;
+  }
+  .testimonial-card {
+    border: 0.5px solid rgba(181,212,244,0.25);
+    padding: 2.5rem;
+  }
+  .testimonial-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem; font-style: italic;
+    line-height: 1.7;
+    color: var(--light);
+    margin-bottom: 2rem;
+  }
+  .testimonial-quote::before { content: '\201C'; font-size: 2rem; color: var(--mid); line-height: 0; vertical-align: -0.5rem; margin-right: 0.2rem; }
+  .testimonial-author {
+    font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--mid);
+  }
+  .testimonial-role {
+    font-size: 0.75rem; color: rgba(181,212,244,0.5); margin-top: 0.25rem;
+  }
+
+  /* CONTACT */
+  #contact { background: var(--off); }
+  .contact-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 6rem; margin-top: 3.5rem;
+  }
+  .contact-info p {
+    font-size: 0.9rem; line-height: 1.9; color: var(--gray);
+    margin-bottom: 2rem;
+  }
+  .contact-detail {
+    display: flex; align-items: flex-start; gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+  .contact-detail-label {
+    font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--mid); min-width: 60px; padding-top: 2px;
+  }
+  .contact-detail-val {
+    font-size: 0.9rem; color: var(--navy);
+  }
+
+  .contact-form { display: flex; flex-direction: column; gap: 1.25rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+  .form-group label {
+    font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--gray);
+  }
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem; font-weight: 300;
+    background: var(--white);
+    border: 0.5px solid var(--light);
+    padding: 0.85rem 1rem;
+    color: var(--dark);
+    outline: none;
+    transition: border-color 0.2s;
+    appearance: none;
+  }
+  .form-group input:focus,
+  .form-group textarea:focus,
+  .form-group select:focus { border-color: var(--mid); }
+  .form-group textarea { min-height: 120px; resize: vertical; }
+
+  .form-submit {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase;
+    background: var(--navy); color: var(--white);
+    border: none; padding: 1rem 2.5rem;
+    cursor: pointer; align-self: flex-start;
+    transition: background 0.2s;
+  }
+  .form-submit:hover { background: var(--blue); }
+
+  /* FOOTER */
+  footer {
+    background: var(--dark);
+    padding: 2.5rem 4rem;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.9rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--light);
+  }
+  .footer-copy {
+    font-size: 0.75rem; color: rgba(181,212,244,0.4);
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .hero-tag   { animation: fadeUp 0.6s ease both; }
+  .hero-title { animation: fadeUp 0.6s 0.1s ease both; }
+  .hero-sub   { animation: fadeUp 0.6s 0.2s ease both; }
+  .hero-cta   { animation: fadeUp 0.6s 0.3s ease both; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <div class="nav-mark">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="16" cy="13" r="11" fill="#E6F1FB" stroke="#B5D4F4" stroke-width="0.5"/>
+        <polyline points="10,13 14,17 22,8" stroke="#185FA5" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="13" y1="21" x2="19" y2="21" stroke="#378ADD" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <span class="nav-wordmark">LMD Accounting</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#testimonials">Testimonials</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-tag">Trusted Bookkeeping Services</div>
+  <h1 class="hero-title">Your books,<br/><em>beautifully</em><br/>balanced.</h1>
+  <p class="hero-sub">Accurate, reliable bookkeeping for businesses of every size. Let Leah M. Davis handle the numbers so you can focus on what you do best.</p>
+  <a href="#contact" class="hero-cta">Get in touch <span>→</span></a>
+
+  <div class="hero-logo-large">
+    <svg width="500" height="500" viewBox="0 0 500 500" fill="none">
+      <circle cx="250" cy="250" r="220" stroke="#0C447C" stroke-width="2"/>
+      <polyline points="140,250 210,330 360,160" stroke="#0C447C" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-label">What I offer</div>
+  <h2 class="section-title">Services built for<br/>your business</h2>
+  <div class="services-grid">
+    <div class="service-card">
+      <svg class="service-icon" viewBox="0 0 36 36" fill="none">
+        <rect x="6" y="4" width="24" height="28" rx="2" stroke="#185FA5" stroke-width="1.2"/>
+        <line x1="11" y1="13" x2="25" y2="13" stroke="#378ADD" stroke-width="1" stroke-linecap="round"/>
+        <line x1="11" y1="18" x2="25" y2="18" stroke="#378ADD" stroke-width="1" stroke-linecap="round"/>
+        <line x1="11" y1="23" x2="20" y2="23" stroke="#378ADD" stroke-width="1" stroke-linecap="round"/>
+      </svg>
+      <div class="service-name">Monthly Bookkeeping</div>
+      <p class="service-desc">Consistent, accurate recording of all financial transactions. Bank reconciliations, categorization, and monthly reports delivered on time, every time.</p>
+    </div>
+    <div class="service-card">
+      <svg class="service-icon" viewBox="0 0 36 36" fill="none">
+        <polyline points="6,28 14,18 20,22 28,10" stroke="#185FA5" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="28" cy="10" r="3" stroke="#378ADD" stroke-width="1"/>
+      </svg>
+      <div class="service-name">Financial Reporting</div>
+      <p class="service-desc">Clear profit & loss statements, balance sheets, and cash flow reports. Understand exactly where your business stands at any given moment.</p>
+    </div>
+    <div class="service-card">
+      <svg class="service-icon" viewBox="0 0 36 36" fill="none">
+        <rect x="4" y="8" width="28" height="20" rx="2" stroke="#185FA5" stroke-width="1.2"/>
+        <line x1="4" y1="14" x2="32" y2="14" stroke="#378ADD" stroke-width="1"/>
+        <circle cx="10" cy="22" r="2" stroke="#378ADD" stroke-width="1"/>
+      </svg>
+      <div class="service-name">Accounts Payable & Receivable</div>
+      <p class="service-desc">Stay on top of what you owe and what you're owed. Invoicing, bill tracking, and follow-up so cash flow stays healthy.</p>
+    </div>
+    <div class="service-card">
+      <svg class="service-icon" viewBox="0 0 36 36" fill="none">
+        <circle cx="18" cy="18" r="13" stroke="#185FA5" stroke-width="1.2"/>
+        <line x1="18" y1="10" x2="18" y2="18" stroke="#378ADD" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="18" y1="18" x2="24" y2="22" stroke="#378ADD" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+      <div class="service-name">Payroll Processing</div>
+      <p class="service-desc">Timely and accurate payroll for your team. Tax withholdings, direct deposit coordination, and payroll records maintained with care.</p>
+    </div>
+    <div class="service-card">
+      <svg class="service-icon" viewBox="0 0 36 36" fill="none">
+        <path d="M18 4 L32 10 V20 Q32 30 18 34 Q4 30 4 20 V10 Z" stroke="#185FA5" stroke-width="1.2" fill="none"/>
+        <polyline points="12,18 16,22 24,14" stroke="#378ADD" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="service-name">Tax Preparation Support</div>
+      <p class="service-desc">Year-end clean-up and organized records to make tax season stress-free. Coordination with your CPA so filing goes smoothly.</p>
+    </div>
+    <div class="service-card">
+      <svg class="service-icon" viewBox="0 0 36 36" fill="none">
+        <rect x="6" y="6" width="10" height="10" rx="1" stroke="#185FA5" stroke-width="1.2"/>
+        <rect x="20" y="6" width="10" height="10" rx="1" stroke="#185FA5" stroke-width="1.2"/>
+        <rect x="6" y="20" width="10" height="10" rx="1" stroke="#185FA5" stroke-width="1.2"/>
+        <rect x="20" y="20" width="10" height="10" rx="1" stroke="#378ADD" stroke-width="1.2"/>
+      </svg>
+      <div class="service-name">QuickBooks Setup & Cleanup</div>
+      <p class="service-desc">Get your QuickBooks account set up correctly from day one, or let me untangle an existing setup so your data is accurate and usable.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="section-label">Investment</div>
+  <h2 class="section-title">Simple, transparent pricing</h2>
+  <p class="pricing-intro">No hidden fees, no surprises. Choose the plan that fits where your business is today — and grow from there.</p>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <div class="pricing-tier">Starter</div>
+      <div class="pricing-price">$299</div>
+      <div class="pricing-period">per month</div>
+      <ul class="pricing-features">
+        <li>Up to 75 transactions/mo</li>
+        <li>Monthly bank reconciliation</li>
+        <li>P&L + balance sheet</li>
+        <li>Email support</li>
+      </ul>
+      <a href="#contact" class="pricing-cta">Get started</a>
+    </div>
+    <div class="pricing-card featured">
+      <div class="pricing-badge">Most popular</div>
+      <div class="pricing-tier">Growth</div>
+      <div class="pricing-price">$549</div>
+      <div class="pricing-period">per month</div>
+      <ul class="pricing-features">
+        <li>Up to 200 transactions/mo</li>
+        <li>A/R & A/P management</li>
+        <li>Full financial reporting</li>
+        <li>Payroll (up to 10 employees)</li>
+        <li>Priority support</li>
+      </ul>
+      <a href="#contact" class="pricing-cta">Get started</a>
+    </div>
+    <div class="pricing-card">
+      <div class="pricing-tier">Full Service</div>
+      <div class="pricing-price">Custom</div>
+      <div class="pricing-period">tailored to you</div>
+      <ul class="pricing-features">
+        <li>Unlimited transactions</li>
+        <li>Full-service bookkeeping</li>
+        <li>Tax prep coordination</li>
+        <li>Dedicated monthly call</li>
+        <li>CFO-level insights</li>
+      </ul>
+      <a href="#contact" class="pricing-cta">Let's talk</a>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-visual">
+    <div class="about-rect">
+      <svg width="120" height="120" viewBox="0 0 120 120" fill="none" opacity="0.25">
+        <circle cx="60" cy="60" r="50" stroke="#185FA5" stroke-width="1"/>
+        <polyline points="35,60 52,78 85,42" stroke="#185FA5" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="46" y1="90" x2="74" y2="90" stroke="#378ADD" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="about-accent">
+      <div class="about-stat">
+        <div class="about-stat-num">10+</div>
+        <div class="about-stat-label">Years experience</div>
+      </div>
+    </div>
+  </div>
+  <div class="about-text">
+    <div class="section-label">About Leah</div>
+    <h2 class="section-title">Numbers are my language. Your success is my mission.</h2>
+    <p>I started LMD Accounting because I believe every business owner deserves reliable, honest bookkeeping — without the confusion or the corporate overhead.</p>
+    <p>With over a decade of experience working with small businesses across a wide range of industries, I bring precision, discretion, and genuine care to every client relationship.</p>
+    <p>When your books are in order, you can make better decisions, sleep better at night, and grow with confidence. That's what I'm here for.</p>
+    <div class="about-signature">Leah M. Davis</div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="section-label">Client stories</div>
+  <h2 class="section-title">Trusted by business owners</h2>
+  <div class="testimonials-grid">
+    <div class="testimonial-card">
+      <p class="testimonial-quote">Leah completely transformed how I think about my finances. I finally understand where my money is going — and I've never felt more in control of my business.</p>
+      <div class="testimonial-author">Sarah K.</div>
+      <div class="testimonial-role">Owner, Bloom Floral Studio</div>
+    </div>
+    <div class="testimonial-card">
+      <p class="testimonial-quote">After years of dreading tax season, I actually felt prepared this year. Leah's organization and attention to detail made everything seamless.</p>
+      <div class="testimonial-author">Marcus T.</div>
+      <div class="testimonial-role">Founder, Riverside Construction</div>
+    </div>
+    <div class="testimonial-card">
+      <p class="testimonial-quote">Professional, responsive, and genuinely invested in my success. LMD Accounting is worth every penny — I only wish I'd found Leah sooner.</p>
+      <div class="testimonial-author">Priya M.</div>
+      <div class="testimonial-role">Principal, PM Consulting Group</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-label">Get in touch</div>
+  <h2 class="section-title">Ready to get your<br/>books in order?</h2>
+  <div class="contact-grid">
+    <div class="contact-info">
+      <p>I'd love to learn about your business and see how I can help. Reach out and I'll get back to you within one business day.</p>
+      <div class="contact-detail">
+        <span class="contact-detail-label">Email</span>
+        <span class="contact-detail-val">leah@lmdaccounting.com</span>
+      </div>
+      <div class="contact-detail">
+        <span class="contact-detail-label">Phone</span>
+        <span class="contact-detail-val">(949) 555-0142</span>
+      </div>
+      <div class="contact-detail">
+        <span class="contact-detail-label">Location</span>
+        <span class="contact-detail-val">Rancho Santa Margarita, CA<br/>Serving clients nationwide</span>
+      </div>
+    </div>
+    <form class="contact-form" onsubmit="handleSubmit(event)">
+      <div class="form-group">
+        <label>Your name</label>
+        <input type="text" placeholder="Jane Smith"/>
+      </div>
+      <div class="form-group">
+        <label>Email address</label>
+        <input type="email" placeholder="jane@yourbusiness.com"/>
+      </div>
+      <div class="form-group">
+        <label>Service interested in</label>
+        <select>
+          <option value="">Select a service…</option>
+          <option>Monthly Bookkeeping</option>
+          <option>Financial Reporting</option>
+          <option>Accounts Payable & Receivable</option>
+          <option>Payroll Processing</option>
+          <option>Tax Preparation Support</option>
+          <option>QuickBooks Setup & Cleanup</option>
+          <option>Not sure yet</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Message</label>
+        <textarea placeholder="Tell me a little about your business and what you're looking for…"></textarea>
+      </div>
+      <button type="submit" class="form-submit">Send message →</button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">LMD Accounting · Leah M. Davis</div>
+  <div class="footer-copy">© 2026 LMD Accounting. All rights reserved.</div>
+</footer>
+
+<script>
+function handleSubmit(e) {
+  e.preventDefault();
+  const btn = e.target.querySelector('.form-submit');
+  btn.textContent = 'Message sent ✓';
+  btn.style.background = '#1D9E75';
+  setTimeout(() => {
+    btn.textContent = 'Send message →';
+    btn.style.background = '';
+    e.target.reset();
+  }, 3000);
+}
+</script>
+</body>
+</html>
